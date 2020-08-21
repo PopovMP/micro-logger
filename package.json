@@ -1,0 +1,23 @@
+{
+  "name": "@popovmp/micro-logger",
+  "version": "1.0.0",
+  "description": "A logger for nodejs",
+  "main": "index.js",
+  "author": "PopovMP <info@forexsb.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/popovmp/micro-logger",
+  "scripts": {
+    "test": "node ./test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/popovmp/micro-logger.git"
+  },
+  "keywords": [
+    "nodejs",
+    "logger"
+  ],
+  "bugs": {
+    "url": "https://github.com/popovmp/micro-logger/issues"
+  }
+}

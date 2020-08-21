@@ -1,0 +1,100 @@
+# A simple Logger helper for nodejs
+
+**micro-logger** is a very simple, zero dependencies library for logging.
+
+Homepage: https://github.com/popovmp/micro-logger
+
+## Synopsis
+
+```javascript
+const path = require("path");
+const logger = require("micro-logger").init( path.join(__dirname, "logs/log.txt") );
+logger.info("Hello World!", "app::sayHello");
+```
+
+## Installation
+
+```
+npm install @popovmp/micro-logger
+```
+
+## Usage
+
+**micro-logger** must be initialized with the path to the log file.
+It is a good idea to set the path relative to `__dirname`.
+
+**micro-logger** writes to the log file asynchronously (aka Fire and Forget).
+You can log only a message, or a message and sender. Sender can be a method name or other hint.
+
+There are three log methods: `logger.info`, `logger.error`, and `logger.text`.
+
+The methods `logger.info`, `logger.error` logs:
+
+  - a date and time in [yyyy-dd-MM hh-mm] format
+  - tag `[INFO]` or `[ERROR]`. the tags help to search the log file or `grep` it by a tag.
+  - sender (optional) in `[sender]` format (if provided).
+
+The `logger.text` method logs only the provided message. It doesn't log a date, a label or a sender.
+
+```javascript
+const path = require("path");
+const logger = require("micro-logger").init( path.join(__dirname, "logs/log.txt") );
+
+logger.info("Hello World");                    // 2020-08-21 06:21 [INFO] Hello World
+logger.info("GET index", "app::router");       // 2020-08-21 06:21 [INFO] [app::router] GET index
+logger.error("Ohh!", "bank::delete-account");  // 2020-08-21 06:21 [ERROR] [bank::delete-account] Ohh!
+logger.text("So Long, and Thanks for All the Fish!");  // So Long, and Thanks for All the Fish!
+```
+
+## Methods
+
+**micro-logger** exports four methods:
+
+```javascript
+/**
+ * Sets the log path
+ * @function init
+ *
+ * @param {string} logFilePath
+ * @return { {init, error, info, text} }
+ */
+logger.init(logFilePath);
+```
+
+```javascript
+/**
+ * Logs a message to a log file
+ * @function info
+ *
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+logger.info(message, sender);
+```
+
+```javascript
+/**
+ * Logs an error to a log file
+ * @function error
+ *
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+logger.error(message, sender);
+```
+
+```javascript
+/**
+ * Logs an error to a log file
+ * @function text
+ *
+ * @param { string } message
+ */
+logger.text(message);
+```
+
+## License
+
+`micro-logger` is free for use and modification. No responsibilities for damages of any kind.
+
+Copyright (c) 2020 Miroslav Popov

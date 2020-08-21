@@ -7,8 +7,12 @@ Homepage: https://github.com/popovmp/micro-logger
 ## Synopsis
 
 ```javascript
-const path = require("path");
-const logger = require("micro-logger").init( path.join(__dirname, "logs/log.txt") );
+// intialize in index.js
+const logger = require("micro-logger").init("./logs/log.txt");
+logger.info("App started", "app::index");
+
+// in other files
+const logger = require("micro-logger");
 logger.info("Hello World!", "app::sayHello");
 ```
 
@@ -22,6 +26,8 @@ npm install @popovmp/micro-logger
 
 **micro-logger** must be initialized with the path to the log file.
 It is a good idea to set the path relative to `__dirname`.
+
+You have to initialize the logger only once. It is best to do it in the application main script `index.js` or `app.js`. 
 
 **micro-logger** writes to the log file asynchronously (aka Fire and Forget).
 You can log only a message, or a message and sender. Sender can be a method name or other hint.

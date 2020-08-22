@@ -2,7 +2,7 @@
 
 const fs   = require("fs");
 const path = require("path");
-const {init, test, done} = require("./micro-tester");
+const {init, test, done} = require("@popovmp/micro-tester");
 
 const logger = require("../index.js");
 

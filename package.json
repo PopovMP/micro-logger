@@ -1,6 +1,6 @@
 {
   "name": "@popovmp/micro-logger",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A logger for nodejs",
   "main": "index.js",
   "author": "PopovMP <info@forexsb.com>",
@@ -9,6 +9,9 @@
   "scripts": {
     "test": "node ./test/index.test.js",
     "prepublishOnly": "npm test"
+  },
+  "devDependencies": {
+    "@popovmp/micro-tester": "^1.0.1"
   },
   "repository": {
     "type": "git",

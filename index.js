@@ -9,7 +9,6 @@ let isInit  = false;
 
 /**
  * Sets the log path
- * @function init
  *
  * @param {string} logFilePath
  * @return { {init, error, info, text} }
@@ -33,7 +32,6 @@ function init(logFilePath) {
 
 /**
  * Logs an error to a log file
- * @function error
  *
  * @param {Error|object|string} message
  * @param {string} [sender]
@@ -44,7 +42,6 @@ function error(message, sender) {
 
 /**
  * Logs a message to a log file
- * @function info
  *
  * @param {Error|object|string} message
  * @param {string} [sender]
@@ -55,7 +52,7 @@ function info(message, sender) {
 
 /**
  * Logs a text message
- * @function text
+ *
  * @param {string} message
  */
 function text(message) {
@@ -67,6 +64,7 @@ function text(message) {
 
 /**
  * Logs a message to a log file
+ *
  * @param {string} tag
  * @param {Error|object|string} message
  * @param {string} [sender]
@@ -88,7 +86,8 @@ function timeToString(time) {
     const day   = date.getDate()    < 10 ? "0" + date.getDate()        : date.getDate();
     const hour  = date.getHours()   < 10 ? "0" + date.getHours()       : date.getHours();
     const min   = date.getMinutes() < 10 ? "0" + date.getMinutes()     : date.getMinutes();
-    return `${year}-${month}-${day} ${hour}:${min}`;
+    const sec   = date.getSeconds() < 10 ? "0" + date.getSeconds()     : date.getSeconds();
+    return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
 }
 
 function fs_appendFile_ready(err) {

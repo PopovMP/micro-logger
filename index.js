@@ -7,6 +7,11 @@ const path = require("path");
 let logPath = "";
 let isInit  = false;
 
+const tags = {
+    error: "[ERROR]",
+    info:  "[INFO]",
+}
+
 /**
  * Sets the log path
  *
@@ -37,7 +42,7 @@ function init(logFilePath) {
  * @param {string} [sender]
  */
 function error(message, sender) {
-    logMessage("[ERROR]", message, sender);
+    logMessage(tags["error"], message, sender);
 }
 
 /**
@@ -47,7 +52,7 @@ function error(message, sender) {
  * @param {string} [sender]
  */
 function info(message, sender) {
-    logMessage("[INFO]", message, sender);
+    logMessage(tags["info"], message, sender);
 }
 
 /**
@@ -70,15 +75,45 @@ function text(message) {
  * @param {string} [sender]
  */
 function logMessage(tag, message, sender) {
-    const timeText    = timeToString( Date.now() );
-    const senderText  = sender ? "[" + sender + "] " : "";
-    const messageText = typeof message === "string" ? message : JSON.stringify(message);
-    const logText     = timeText + " " + tag + " " + senderText + messageText + "\r\n";
+    const logText = composeMessage(tag, message, sender);
 
-    fs.appendFile(logPath, logText,
-        fs_appendFile_ready);
+    if (isInit) {
+        fs.appendFile(logPath, logText + "\r\n",
+            fs_appendFile_ready);
+    }
+    else {
+        if (tag === tags["error"]) {
+            console.error(message);
+        } else {
+            console.log(message);
+        }
+    }
+
 }
 
+/**
+ * Composes the log text
+ *
+ * @param {string} tag
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+function composeMessage(tag, message, sender) {
+    const timeText    = timeToString( Date.now() );
+    const senderText  = sender ? "[" + sender + "] " : "";
+    const messageText = typeof message === "string"
+        ? message
+        : JSON.stringify(message);
+
+    return  timeText + " " + tag + " " + senderText + messageText;
+}
+
+/**
+ * Formats time to string
+ *
+ * @param {number} time
+ * @returns {string}
+ */
 function timeToString(time) {
     const date  = new Date(time);
     const year  = date.getFullYear();

@@ -24,8 +24,11 @@ npm install @popovmp/micro-logger
 
 ## Usage
 
-**micro-logger** must be initialized with the path to the log file.
+**micro-logger** must be initialized with the path to the log file in order to write the log.
 It is a good idea to set the path relative to `__dirname`.
+
+If **micro-logger** is not initialized, it writes to teh console.
+It allows it to be used in modules without initialization. 
 
 You have to initialize the logger only once. It is best to do it in the application main script `index.js` or `app.js`. 
 

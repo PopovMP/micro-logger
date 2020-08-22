@@ -1,13 +1,14 @@
 {
   "name": "@popovmp/micro-logger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A logger for nodejs",
   "main": "index.js",
   "author": "PopovMP <info@forexsb.com>",
   "license": "MIT",
   "homepage": "https://github.com/popovmp/micro-logger",
   "scripts": {
-    "test": "node ./test/test.js"
+    "test": "node ./test/index.test.js",
+    "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",

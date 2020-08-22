@@ -2,8 +2,11 @@
 
 const fs   = require("fs");
 const path = require("path");
+const {init, test, done} = require("./micro-tester");
 
 const logger = require("../index.js");
+
+init("Test micro-logger");
 
 const logPath = path.join(__dirname, "/logs/log.txt");
 logger.init(logPath);
@@ -42,7 +45,7 @@ test("Log text", () =>
 
 // Sleep for 1 secs to give time for the log to update
 // We hope that it will be enough.
-// There is no callback report form the log to make it faster and simpler.
+// There is no callback report from the log to make it faster and simpler.
 setTimeout(checkLogContent, 1000);
 
 function checkLogContent() {
@@ -67,36 +70,5 @@ function checkLogContent() {
     fs.unlinkSync(logPath);
     fs.rmdirSync(path.dirname(logPath));
 
-    // Tests end
     done();
-}
-
-function test(message, test) {
-    if (!global.__testResults) {
-        global.__testResults = {index: 0, success: 0, fail: 0};
-    }
-
-    global.__testResults.index++;
-
-    try {
-        const ans = test();
-        if (ans) {
-            console.log(global.__testResults.index + ". ✅ " + message);
-            global.__testResults.success++;
-        } else {
-            console.error(global.__testResults.index + ". ❌ " + message);
-            global.__testResults.fail++;
-        }
-    } catch (e) {
-        console.error(global.__testResults.index + ". ❌ " + message + ": " + e.message);
-        global.__testResults.fail++;
-    }
-}
-
-function done() {
-    const message = `Success: ${global.__testResults.success}` +
-        ` of ${global.__testResults.index}` +
-        `, Failed: ${global.__testResults.fail}`;
-    delete global.__testResults;
-    console.log(message);
 }

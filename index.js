@@ -100,19 +100,24 @@ function logMessage(tag, message, sender) {
             fs_appendFile_ready);
 
         if (loggerOptions.tee) {
-            printMessage(tag, message);
+            printLogText(tag, logText);
         }
     }
     else {
-        printMessage(tag, message);
+        printLogText(tag, message);
     }
 }
 
-function printMessage(tag, message) {
+/**
+ * Prints the logText on the console
+ * @param {string} tag
+ * @param {string} logText
+ */
+function printLogText(tag, logText) {
     if (tag === tags["error"]) {
-        console.error(message);
+        console.error(logText);
     } else {
-        console.log(message);
+        console.log(logText);
     }
 }
 

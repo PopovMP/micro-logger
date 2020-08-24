@@ -1,8 +1,9 @@
 "use strict"
 
-const fs   = require("fs");
-const path = require("path");
-const {init, test, done} = require("@popovmp/micro-tester");
+const fs     = require("fs");
+const path   = require("path");
+const assert = require("assert");
+const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const logger = require("../index.js");
 
@@ -11,37 +12,37 @@ init("Test micro-logger");
 const logPath = path.join(__dirname, "/logs/log.txt");
 logger.init(logPath);
 
-test("Have an `init` function", () =>
-    typeof logger.init === "function"
-);
+test("Have an `init` function", () => {
+    assert.strictEqual(typeof logger.init, "function");
+});
 
-test("Have an `error` function", () =>
-    typeof logger.error === "function"
-);
+test("Have an `error` function", () => {
+    assert.strictEqual(typeof logger.error, "function");
+});
 
-test("Have an `info` function", () =>
-    typeof logger.info === "function"
-);
+test("Have an `info` function", () => {
+    assert.strictEqual(typeof logger.info, "function");
+});
 
-test("Have a `text` function", () =>
-    typeof logger.text === "function"
-);
+test("Have a `text` function", () => {
+    assert.strictEqual(typeof logger.text, "function");
+});
 
-test("Log file is created", () =>
-    fs.existsSync(logPath)
-);
+test("Log file is created", () => {
+    assert.ok(fs.existsSync(logPath));
+});
 
-test("Log info", () =>
-    logger.info("FOO", "sender.foo") || true
-);
+test("Log info", () => {
+    logger.info("FOO", "sender.foo");
+});
 
-test("Log error", () =>
-    logger.error("BAR") || true
-);
+test("Log error", () => {
+    logger.error("BAR");
+});
 
-test("Log text", () =>
-    logger.text("foo-bar") || true
-);
+test("Log text", () => {
+    logger.text("foo-bar");
+});
 
 // Sleep for 1 secs to give time for the log to update
 // We hope that it will be enough.
@@ -51,24 +52,24 @@ setTimeout(checkLogContent, 1000);
 function checkLogContent() {
     const content = fs.readFileSync(logPath, "utf-8");
 
-    test("Check info content", () =>
+    test("Check info content", () => {
+        assert.match(content, /INFO.*FOO/);
+    });
+
+    test("Check error content", () => {
+        content.match(/ERROR.*BAR/);
+    });
+
+    test("Check text content", () => {
         content.match(/INFO.*FOO/)
-    );
+    });
 
-    test("Check error content", () =>
-        content.match(/ERROR.*BAR/)
-    );
-
-    test("Check text content", () =>
-        content.match(/foo-bar/)
-    );
-
-    test("Check sender", () =>
-        content.match(/sender\.foo/)
-    );
+    test("Check sender", () => {
+        content.match(/INFO.*FOO/);
+    });
 
     fs.unlinkSync(logPath);
     fs.rmdirSync(path.dirname(logPath));
 
-    done();
+    ensure();
 }

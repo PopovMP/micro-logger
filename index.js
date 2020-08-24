@@ -3,6 +3,17 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @typedef {object} LoggerOptions
+ * @property {boolean} tee
+ */
+
+/**
+ * @type {LoggerOptions}
+ */
+const loggerOptions = {
+    tee: false,
+};
+
 /** @type {string} */
 let logPath = "";
 let isInit  = false;
@@ -16,9 +27,10 @@ const tags = {
  * Sets the log path
  *
  * @param {string} logFilePath
+ * @param {LoggerOptions} [options]
  * @return { {init, error, info, text} }
  */
-function init(logFilePath) {
+function init(logFilePath, options) {
     if (isInit) {
         // Already initialised
         return module.exports;
@@ -26,6 +38,12 @@ function init(logFilePath) {
 
     logPath = logFilePath;
     isInit  = true;
+
+    if (options) {
+        if (typeof options.tee === "boolean") {
+            loggerOptions.tee = options.tee;
+        }
+    }
 
     if ( !fs.existsSync(logPath) ) {
         fs.mkdirSync(path.dirname(logPath), {recursive: true});
@@ -80,15 +98,22 @@ function logMessage(tag, message, sender) {
     if (isInit) {
         fs.appendFile(logPath, logText + "\r\n",
             fs_appendFile_ready);
-    }
-    else {
-        if (tag === tags["error"]) {
-            console.error(message);
-        } else {
-            console.log(message);
+
+        if (loggerOptions.tee) {
+            printMessage(tag, message);
         }
     }
+    else {
+        printMessage(tag, message);
+    }
+}
 
+function printMessage(tag, message) {
+    if (tag === tags["error"]) {
+        console.error(message);
+    } else {
+        console.log(message);
+    }
 }
 
 /**

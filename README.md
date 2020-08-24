@@ -55,6 +55,20 @@ logger.error("Ohh!", "bank::delete-account");  // 2020-08-21 06:21:11 [ERROR] [b
 logger.text("So Long, and Thanks for All the Fish!");  // So Long, and Thanks for All the Fish!
 ```
 
+## Options
+
+The `init` method accepts an options `options` parameter. It has one property `tee: boolean`. 
+
+When `tee` is set to `true`, the logger doubles the message on the console.
+
+```javascript
+const path = require("path");
+const logger = require("micro-logger");
+logger.init( path.join(__dirname, "logs/log.txt"), {tee: true} );
+
+logger.info("Foo"); // Logs "Foo", Prints "Foo" on the console.
+```
+
 ## Methods
 
 **micro-logger** exports four methods:
@@ -65,9 +79,11 @@ logger.text("So Long, and Thanks for All the Fish!");  // So Long, and Thanks fo
  * @function init
  *
  * @param {string} logFilePath
+ * @param {LoggerOptions} [options]
+ *
  * @returns { {init, error, info, text} }
  */
-logger.init(logFilePath);
+logger.init(logFilePath, options);
 ```
 
 ```javascript

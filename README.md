@@ -8,12 +8,12 @@ Homepage: https://github.com/popovmp/micro-logger
 
 ```javascript
 // Intialize `micro-logger`in your index.js
-const logger = require("micro-logger").init("./logs/log.txt");
-logger.info("App started", "app::index");
+const logger = require('micro-logger').init('./logs/log.txt');
+logger.info('App started', 'app::index');
 
 // Use it in your other files
-const logger = require("micro-logger");
-logger.info("Hello World!", "app::sayHello");
+const logger = require('micro-logger');
+logger.info('Hello World!', 'app::sayHello');
 ```
 
 ## Installation
@@ -46,13 +46,13 @@ The methods `logger.info`, `logger.error` logs:
 The `logger.text` method logs only the provided message. It doesn't log a date, a label or a sender.
 
 ```javascript
-const path = require("path");
-const logger = require("micro-logger").init( path.join(__dirname, "logs/log.txt") );
+const path = require('path');
+const logger = require('micro-logger').init( path.join(__dirname, 'logs/log.txt') );
 
-logger.info("Hello World");                    // 2020-08-21 06:21:11 [INFO] Hello World
-logger.info("GET index", "app::router");       // 2020-08-21 06:21:11 [INFO] [app::router] GET index
-logger.error("Ohh!", "bank::delete-account");  // 2020-08-21 06:21:11 [ERROR] [bank::delete-account] Ohh!
-logger.text("So Long, and Thanks for All the Fish!");  // So Long, and Thanks for All the Fish!
+logger.info('Hello World');                    // 2020-08-21 06:21:11 [INFO] Hello World
+logger.info('GET index', 'app::router');       // 2020-08-21 06:21:11 [INFO] [app::router] GET index
+logger.error('Ohh!', 'bank::delete-account');  // 2020-08-21 06:21:11 [ERROR] [bank::delete-account] Ohh!
+logger.text('So Long, and Thanks for All the Fish!');  // So Long, and Thanks for All the Fish!
 ```
 
 ## Options
@@ -62,11 +62,11 @@ The `init` method accepts an options `options` parameter. It has one property `t
 When `tee` is set to `true`, the logger doubles the message on the console.
 
 ```javascript
-const path = require("path");
-const logger = require("micro-logger");
-logger.init( path.join(__dirname, "logs/log.txt"), {tee: true} );
+const path = require('path');
+const logger = require('micro-logger');
+logger.init( path.join(__dirname, 'logs/log.txt'), {tee: true} );
 
-logger.info("Foo"); // Logs "Foo", Prints "Foo" on the console.
+logger.info('Foo'); // Logs 'Foo', Prints 'Foo' on the console.
 ```
 
 ## Methods

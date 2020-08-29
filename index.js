@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 /** @typedef {object} LoggerOptions
  * @property {boolean} tee
@@ -19,8 +19,8 @@ let logPath = "";
 let isInit  = false;
 
 const tags = {
-    error: "[ERROR]",
-    info:  "[INFO]",
+    error: '[ERROR]',
+    info:  '[INFO]',
 }
 
 /**
@@ -40,14 +40,14 @@ function init(logFilePath, options) {
     isInit  = true;
 
     if (options) {
-        if (typeof options.tee === "boolean") {
+        if (typeof options.tee === 'boolean') {
             loggerOptions.tee = options.tee;
         }
     }
 
     if ( !fs.existsSync(logPath) ) {
         fs.mkdirSync(path.dirname(logPath), {recursive: true});
-        fs.writeFileSync(logPath, "", "utf8");
+        fs.writeFileSync(logPath, "", 'utf8');
     }
 
     return module.exports;
@@ -60,7 +60,7 @@ function init(logFilePath, options) {
  * @param {string} [sender]
  */
 function error(message, sender) {
-    logMessage(tags["error"], message, sender);
+    logMessage(tags['error'], message, sender);
 }
 
 /**
@@ -70,7 +70,7 @@ function error(message, sender) {
  * @param {string} [sender]
  */
 function info(message, sender) {
-    logMessage(tags["info"], message, sender);
+    logMessage(tags['info'], message, sender);
 }
 
 /**
@@ -79,7 +79,7 @@ function info(message, sender) {
  * @param {string} message
  */
 function text(message) {
-    const msg = message + "\r\n";
+    const msg = message + '\r\n';
 
     fs.appendFile(logPath, msg,
         fs_appendFile_ready);
@@ -96,7 +96,7 @@ function logMessage(tag, message, sender) {
     const logText = composeMessage(tag, message, sender);
 
     if (isInit) {
-        fs.appendFile(logPath, logText + "\r\n",
+        fs.appendFile(logPath, logText + '\r\n',
             fs_appendFile_ready);
 
         if (loggerOptions.tee) {
@@ -114,7 +114,7 @@ function logMessage(tag, message, sender) {
  * @param {string} logText
  */
 function printLogText(tag, logText) {
-    if (tag === tags["error"]) {
+    if (tag === tags['error']) {
         console.error(logText);
     } else {
         console.log(logText);
@@ -130,12 +130,12 @@ function printLogText(tag, logText) {
  */
 function composeMessage(tag, message, sender) {
     const timeText    = timeToString( Date.now() );
-    const senderText  = sender ? "[" + sender + "] " : "";
-    const messageText = typeof message === "string"
+    const senderText  = sender ? '[' + sender + '] ' : "";
+    const messageText = typeof message === 'string'
         ? message
         : JSON.stringify(message);
 
-    return  timeText + " " + tag + " " + senderText + messageText;
+    return  timeText + ' ' + tag + ' ' + senderText + messageText;
 }
 
 /**
@@ -147,11 +147,11 @@ function composeMessage(tag, message, sender) {
 function timeToString(time) {
     const date  = new Date(time);
     const year  = date.getFullYear();
-    const month = date.getMonth()   <  9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
-    const day   = date.getDate()    < 10 ? "0" + date.getDate()        : date.getDate();
-    const hour  = date.getHours()   < 10 ? "0" + date.getHours()       : date.getHours();
-    const min   = date.getMinutes() < 10 ? "0" + date.getMinutes()     : date.getMinutes();
-    const sec   = date.getSeconds() < 10 ? "0" + date.getSeconds()     : date.getSeconds();
+    const month = date.getMonth()   <  9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+    const day   = date.getDate()    < 10 ? '0' + date.getDate()        : date.getDate();
+    const hour  = date.getHours()   < 10 ? '0' + date.getHours()       : date.getHours();
+    const min   = date.getMinutes() < 10 ? '0' + date.getMinutes()     : date.getMinutes();
+    const sec   = date.getSeconds() < 10 ? '0' + date.getSeconds()     : date.getSeconds();
     return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
 }
 

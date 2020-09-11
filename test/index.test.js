@@ -2,13 +2,13 @@
 
 const fs   = require('fs');
 const path = require('path');
-const { strictEqual, ok, match } = require('assert');
+const { strictEqual, ok, match, doesNotMatch } = require('assert');
 const { describe, it } = require('@popovmp/mocha-tiny');
 
 const logger = require('../index.js');
 
 const logPath = path.join(__dirname, '/logs/log.txt');
-logger.init(logPath);
+logger.init(logPath, {suppress: ['DEBUG']});
 
 describe('Test micro-logger', () => {
     describe('API', () => {
@@ -22,6 +22,10 @@ describe('Test micro-logger', () => {
 
         it('Have an `info` function', () => {
             strictEqual(typeof logger.info, 'function');
+        });
+
+        it('Have a `debug` function', () => {
+            strictEqual(typeof logger.debug, 'function');
         });
 
         it('Have a `text` function', () => {
@@ -42,6 +46,10 @@ describe('Test micro-logger', () => {
 
         it('Log error', () => {
             logger.error('BAR');
+        });
+
+        it('Log debug', () => {
+            logger.debug('debug');
         });
 
         it('Log text', () => {
@@ -65,6 +73,10 @@ function checkLogContent() {
 
         it('Check error content', () => {
             match(content, /ERROR.*BAR/);
+        });
+
+        it('Debug is suppressed', () => {
+            doesNotMatch(content, /DEBUG.*debug/)
         });
 
         it('Check text content', () => {

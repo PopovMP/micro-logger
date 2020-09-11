@@ -3,8 +3,11 @@
 const fs = require('fs');
 const path = require('path');
 
-/** @typedef {object} LoggerOptions
- * @property {boolean} tee
+/**
+ * @typedef {object} LoggerOptions
+ *
+ * @property { boolean  } [tee=false]
+ * @property { string[] } [suppress=[]] - tags to suppress. Possibilities: ['TEXT', 'DEBUG', 'INFO', 'ERROR']
  */
 
 /**
@@ -12,6 +15,7 @@ const path = require('path');
  */
 const loggerOptions = {
     tee: false,
+    suppress: [],
 };
 
 /** @type {string} */
@@ -19,15 +23,17 @@ let logPath = "";
 let isInit  = false;
 
 const tags = {
-    error: '[ERROR]',
+    debug: '[DEBUG]',
     info:  '[INFO]',
+    error: '[ERROR]',
 }
 
 /**
  * Sets the log path
  *
- * @param {string} logFilePath
- * @param {LoggerOptions} [options]
+ * @param { string        } logFilePath
+ * @param { LoggerOptions } [options]
+ *
  * @return { {init, error, info, text} }
  */
 function init(logFilePath, options) {
@@ -42,6 +48,10 @@ function init(logFilePath, options) {
     if (options) {
         if (typeof options.tee === 'boolean') {
             loggerOptions.tee = options.tee;
+        }
+
+        if (Array.isArray(options.suppress)) {
+            loggerOptions.suppress = options.suppress.slice();
         }
     }
 
@@ -60,7 +70,25 @@ function init(logFilePath, options) {
  * @param {string} [sender]
  */
 function error(message, sender) {
+    if (loggerOptions.suppress.includes('ERROR')) {
+        return;
+    }
+
     logMessage(tags['error'], message, sender);
+}
+
+/**
+ * Logs a debug message to a log file
+ *
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+function debug(message, sender) {
+    if (loggerOptions.suppress.includes('DEBUG')) {
+        return;
+    }
+
+    logMessage(tags['debug'], message, sender);
 }
 
 /**
@@ -70,6 +98,10 @@ function error(message, sender) {
  * @param {string} [sender]
  */
 function info(message, sender) {
+    if (loggerOptions.suppress.includes('INFO')) {
+        return;
+    }
+
     logMessage(tags['info'], message, sender);
 }
 
@@ -79,6 +111,10 @@ function info(message, sender) {
  * @param {string} message
  */
 function text(message) {
+    if (loggerOptions.suppress.includes('TEXT')) {
+        return;
+    }
+
     const msg = message + '\r\n';
 
     fs.appendFile(logPath, msg,
@@ -166,7 +202,9 @@ module.exports = {
     error,
     info,
     text,
+    debug,
     logError : error,
     logInfo  : info,
     logText  : text,
+    logDebug : debug,
 };

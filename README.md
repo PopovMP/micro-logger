@@ -61,9 +61,21 @@ logger.text('So Long, and Thanks for All the Fish!');  // So Long, and Thanks fo
 
 ## Options
 
-The `init` method accepts an options `options` parameter. It has one property `tee: boolean`. 
+The `init` method accepts an options `options` parameter. It has two property `tee: boolean` and `suppress: string[]`. 
 
 When `tee` is set to `true`, the logger doubles the message on the console.
+
+The `suppress` parameter accepts a string[]. It suppresses the logging of the tags included.
+
+The possible values are:
+
+```json
+{
+ "suppress": ["DEBUG", "TEXT", "INFO", "ERROR"]
+}
+```
+
+The default values of `suppress` is an empty list.
 
 ```javascript
 const path = require('path');
@@ -75,7 +87,7 @@ logger.info('Foo'); // Logs 'Foo', Prints 'Foo' on the console.
 
 ## Methods
 
-**micro-logger** exports four methods:
+**micro-logger** exports the following methods:
 
 ```javascript
 /**
@@ -88,6 +100,16 @@ logger.info('Foo'); // Logs 'Foo', Prints 'Foo' on the console.
  * @returns { {init, error, info, text} }
  */
 logger.init(logFilePath, options);
+```
+
+```javascript
+/**
+ * Logs a debug message to a log file
+ *
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+logDebug(message);
 ```
 
 ```javascript
@@ -117,6 +139,16 @@ logEror(message, sender);
  * @param { string } message
  */
 logText(message);
+```
+
+```javascript
+/**
+ * Logs a debug message to a log file
+ *
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+logger.debug(message, sender);
 ```
 
 ```javascript

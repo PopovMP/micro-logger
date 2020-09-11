@@ -166,4 +166,7 @@ module.exports = {
     error,
     info,
     text,
+    logError : error,
+    logInfo  : info,
+    logText  : text,
 };

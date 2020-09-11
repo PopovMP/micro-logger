@@ -8,12 +8,16 @@ Homepage: https://github.com/popovmp/micro-logger
 
 ```javascript
 // Intialize `micro-logger`in your index.js
-const logger = require('micro-logger').init('./logs/log.txt');
+const logger = require('@popovmp/micro-logger').init('./logs/log.txt');
 logger.info('App started', 'app::index');
 
 // Use it in your other files
-const logger = require('micro-logger');
+const logger = require('@popovmp/micro-logger');
 logger.info('Hello World!', 'app::sayHello');
+
+// Alternative use
+const { logInfo, logError, logText } = require('@popovmp/micro-logger'); 
+logInfo('Mamma mia!')
 ```
 
 ## Installation
@@ -47,7 +51,7 @@ The `logger.text` method logs only the provided message. It doesn't log a date, 
 
 ```javascript
 const path = require('path');
-const logger = require('micro-logger').init( path.join(__dirname, 'logs/log.txt') );
+const logger = require('@popovmp/micro-logger').init( path.join(__dirname, 'logs/log.txt') );
 
 logger.info('Hello World');                    // 2020-08-21 06:21:11 [INFO] Hello World
 logger.info('GET index', 'app::router');       // 2020-08-21 06:21:11 [INFO] [app::router] GET index
@@ -63,7 +67,7 @@ When `tee` is set to `true`, the logger doubles the message on the console.
 
 ```javascript
 const path = require('path');
-const logger = require('micro-logger');
+const logger = require('@popovmp/micro-logger');
 logger.init( path.join(__dirname, 'logs/log.txt'), {tee: true} );
 
 logger.info('Foo'); // Logs 'Foo', Prints 'Foo' on the console.
@@ -89,7 +93,35 @@ logger.init(logFilePath, options);
 ```javascript
 /**
  * Logs a message to a log file
- * @function info
+ *
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+logInfo(message, sender);
+```
+
+```javascript
+/**
+ * Logs an error to a log file
+ *
+ * @param {Error|object|string} message
+ * @param {string} [sender]
+ */
+logEror(message, sender);
+```
+
+```javascript
+/**
+ * Logs an error to a log file
+ *
+ * @param { string } message
+ */
+logText(message);
+```
+
+```javascript
+/**
+ * Logs a message to a log file
  *
  * @param {Error|object|string} message
  * @param {string} [sender]
@@ -100,7 +132,6 @@ logger.info(message, sender);
 ```javascript
 /**
  * Logs an error to a log file
- * @function error
  *
  * @param {Error|object|string} message
  * @param {string} [sender]
@@ -111,7 +142,6 @@ logger.error(message, sender);
 ```javascript
 /**
  * Logs an error to a log file
- * @function text
  *
  * @param { string } message
  */

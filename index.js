@@ -1,13 +1,14 @@
 'use strict';
 
-const fs = require('fs');
+const os   = require('os');
+const fs   = require('fs');
 const path = require('path');
 
 /**
  * @typedef {object} LoggerOptions
  *
  * @property { boolean  } [tee=false]
- * @property { string[] } [suppress=[]] - tags to suppress. Possibilities: ['TEXT', 'DEBUG', 'INFO', 'ERROR']
+ * @property { string[] } [suppress=[]] - tags to suppress. Possibilities: ['debug', 'error', 'info', 'success', 'text']
  */
 
 /**
@@ -23,9 +24,20 @@ let logPath = "";
 let isInit  = false;
 
 const tags = {
-    debug: '[DEBUG]',
-    info:  '[INFO]',
-    error: '[ERROR]',
+    debug   : '[DEBUG]',
+    error   : '[ERROR]',
+    info    : '[INFO]',
+    success : '[SUCCESS]',
+    text    : '',
+}
+
+const colors = {
+    reset   : '\x1b[0m',
+    debug   : '\x1b[33m', // yellow
+    error   : '\x1b[31m', // red
+    info    : '',
+    success : '\x1b[32m', // green
+    text    : '',
 }
 
 /**
@@ -57,7 +69,7 @@ function init(logFilePath, options) {
 
     if ( !fs.existsSync(logPath) ) {
         fs.mkdirSync(path.dirname(logPath), {recursive: true});
-        fs.writeFileSync(logPath, "", 'utf8');
+        fs.writeFileSync(logPath, '', 'utf8');
     }
 
     return module.exports;
@@ -70,11 +82,7 @@ function init(logFilePath, options) {
  * @param {string} [sender]
  */
 function error(message, sender) {
-    if (loggerOptions.suppress.includes('ERROR')) {
-        return;
-    }
-
-    logMessage(tags['error'], message, sender);
+    logMessage('error', message, sender);
 }
 
 /**
@@ -84,11 +92,7 @@ function error(message, sender) {
  * @param {string} [sender]
  */
 function debug(message, sender) {
-    if (loggerOptions.suppress.includes('DEBUG')) {
-        return;
-    }
-
-    logMessage(tags['debug'], message, sender);
+    logMessage('debug', message, sender);
 }
 
 /**
@@ -98,11 +102,17 @@ function debug(message, sender) {
  * @param {string} [sender]
  */
 function info(message, sender) {
-    if (loggerOptions.suppress.includes('INFO')) {
-        return;
-    }
+    logMessage('info', message, sender);
+}
 
-    logMessage(tags['info'], message, sender);
+/**
+ * Logs a success message to a log file
+ *
+ * @param { string } message
+ * @param { string } [sender]
+ */
+function success(message, sender) {
+    logMessage('success', message, sender);
 }
 
 /**
@@ -111,49 +121,35 @@ function info(message, sender) {
  * @param {string} message
  */
 function text(message) {
-    if (loggerOptions.suppress.includes('TEXT')) {
-        return;
-    }
-
-    const msg = message + '\r\n';
-
-    fs.appendFile(logPath, msg,
-        fs_appendFile_ready);
+    logMessage('text', message);
 }
 
 /**
  * Logs a message to a log file
  *
- * @param {string} tag
- * @param {Error|object|string} message
- * @param {string} [sender]
+ * @param { string } tag
+ * @param { Error|object|string } message
+ * @param { string } [sender]
  */
 function logMessage(tag, message, sender) {
-    const logText = composeMessage(tag, message, sender);
+    if (loggerOptions.suppress.includes(tag)) {
+        return;
+    }
+
+    const text = ['info', 'error', 'debug', 'success'].includes(tag)
+         ? composeMessage(tag, message, sender)
+         : message;
 
     if (isInit) {
-        fs.appendFile(logPath, logText + '\r\n',
-            fs_appendFile_ready);
-
-        if (loggerOptions.tee) {
-            printLogText(tag, logText);
-        }
+        fs.appendFile(logPath, text + os.EOL, err => {
+            if (err) {
+                console.log(err.message);
+            }
+        });
     }
-    else {
-        printLogText(tag, message);
-    }
-}
 
-/**
- * Prints the logText on the console
- * @param {string} tag
- * @param {string} logText
- */
-function printLogText(tag, logText) {
-    if (tag === tags['error']) {
-        console.error(logText);
-    } else {
-        console.log(logText);
+    if (!isInit || loggerOptions.tee) {
+        console.log(colors[tag] + text + colors.reset);
     }
 }
 
@@ -166,12 +162,14 @@ function printLogText(tag, logText) {
  */
 function composeMessage(tag, message, sender) {
     const timeText    = timeToString( Date.now() );
-    const senderText  = sender ? '[' + sender + '] ' : "";
-    const messageText = typeof message === 'string'
-        ? message
-        : JSON.stringify(message);
+    const senderText  = sender ? '[' + sender + '] ' : '';
+    const messageText = typeof message === 'object' || Array.isArray(message)
+        ? message.message
+             ? message.message
+             : JSON.stringify(message, null, 2)
+        : String(message);
 
-    return  timeText + ' ' + tag + ' ' + senderText + messageText;
+    return  timeText + ' ' + tags[tag] + ' ' + senderText + messageText;
 }
 
 /**
@@ -191,20 +189,16 @@ function timeToString(time) {
     return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
 }
 
-function fs_appendFile_ready(err) {
-    if (err) {
-        console.error(err);
-    }
-}
-
 module.exports = {
     init,
     error,
     info,
     text,
     debug,
-    logError : error,
-    logInfo  : info,
-    logText  : text,
-    logDebug : debug,
+    success,
+    logError  : error,
+    logInfo   : info,
+    logText   : text,
+    logDebug  : debug,
+    logSuccess: success,
 };

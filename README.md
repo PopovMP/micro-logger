@@ -1,6 +1,7 @@
 # A simple Logger helper for nodejs
 
-**micro-logger** is a very simple, zero dependencies library for logging.
+**micro-logger** is a very simple, zero dependencies library for logging. It logs to a single predefined file.
+When an option `{tee: true}` is given, **micro-logger** shows colored messages in the console.
 
 Homepage: https://github.com/popovmp/micro-logger
 
@@ -16,7 +17,7 @@ const logger = require('@popovmp/micro-logger');
 logger.info('Hello World!', 'app::sayHello');
 
 // Alternative use
-const { logInfo, logError, logText } = require('@popovmp/micro-logger'); 
+const { logInfo, logError, logText, logDebug, logSuccess } = require('@popovmp/micro-logger'); 
 logInfo('Mamma mia!')
 ```
 
@@ -51,12 +52,14 @@ The `logger.text` method logs only the provided message. It doesn't log a date, 
 
 ```javascript
 const path = require('path');
-const logger = require('@popovmp/micro-logger').init( path.join(__dirname, 'logs/log.txt') );
+const {
+ logInfo, logText, logError, logDebug, logSuccess,
+} = require('@popovmp/micro-logger').init( path.join(__dirname, 'logs/log.txt'), {tee: true, suppress: ['debug']} );
 
-logger.info('Hello World');                    // 2020-08-21 06:21:11 [INFO] Hello World
-logger.info('GET index', 'app::router');       // 2020-08-21 06:21:11 [INFO] [app::router] GET index
-logger.error('Ohh!', 'bank::delete-account');  // 2020-08-21 06:21:11 [ERROR] [bank::delete-account] Ohh!
-logger.text('So Long, and Thanks for All the Fish!');  // So Long, and Thanks for All the Fish!
+logInfo('Hello World');                    // 2020-08-21 06:21:11 [INFO] Hello World
+logInfo('GET index', 'app::router');       // 2020-08-21 06:21:11 [INFO] [app::router] GET index
+logError('Ohh!', 'bank::delete-account');  // 2020-08-21 06:21:11 [ERROR] [bank::delete-account] Ohh!
+logText('So Long, and Thanks for All the Fish!');  // So Long, and Thanks for All the Fish!
 ```
 
 ## Options
@@ -71,7 +74,7 @@ The possible values are:
 
 ```json
 {
- "suppress": ["DEBUG", "TEXT", "INFO", "ERROR"]
+ "suppress": ["debug", "text", "info", "error", "success"]
 }
 ```
 
@@ -109,7 +112,7 @@ logger.init(logFilePath, options);
  * @param {Error|object|string} message
  * @param {string} [sender]
  */
-logDebug(message);
+logDebug(message, sender);
 ```
 
 ```javascript
@@ -130,6 +133,16 @@ logInfo(message, sender);
  * @param {string} [sender]
  */
 logEror(message, sender);
+```
+
+```javascript
+/**
+ * Logs a success information to a log file
+ *
+ * @param {object|string} message
+ * @param {string} [sender]
+ */
+logSuccess(message, sender);
 ```
 
 ```javascript
@@ -169,6 +182,16 @@ logger.info(message, sender);
  * @param {string} [sender]
  */
 logger.error(message, sender);
+```
+
+```javascript
+/**
+ * Logs a success information to a log file
+ *
+ * @param {object|string} message
+ * @param {string} [sender]
+ */
+logger.success(message, sender);
 ```
 
 ```javascript

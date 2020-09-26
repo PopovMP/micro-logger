@@ -49,8 +49,7 @@ const colors = {
  * @return { {init, error, info, text} }
  */
 function init(logFilePath, options) {
-    if (isInit) {
-        // Already initialised
+    if (isInit || !logFilePath) {
         return module.exports;
     }
 

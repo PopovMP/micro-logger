@@ -23,6 +23,9 @@ const loggerOptions = {
 let logPath = ''
 let isInit  = false
 
+/** @type {string|null|undefined} */
+let lastError = undefined
+
 const tags = {
 	debug  : '[DEBUG]',
 	error  : '[ERROR]',
@@ -43,8 +46,8 @@ const colors = {
 /**
  * Sets the log path
  *
- * @param { string        } logFilePath
- * @param { LoggerOptions } [options]
+ * @param {string       } logFilePath
+ * @param {LoggerOptions} [options]
  *
  * @return { {init, error, info, text} }
  */
@@ -82,6 +85,7 @@ function init(logFilePath, options)
  */
 function error(message, sender)
 {
+	lastError = message
 	logMessage('error', message, sender)
 }
 
@@ -114,8 +118,8 @@ function info(message, sender)
 /**
  * Logs a success message to a log file
  *
- * @param { string } message
- * @param { string } [sender]
+ * @param {string} message
+ * @param {string} [sender]
  *
  * @return {void}
  */
@@ -137,11 +141,33 @@ function text(message)
 }
 
 /**
+ * Gets the last logged error message
+ *
+ * @return {string|undefined|null}
+ */
+function getLastError()
+{
+	return lastError
+}
+
+/**
+ * Resets the last error
+ *
+ * @param {null} [value]
+ *
+ * @return {void}
+ */
+function resetLastError(value)
+{
+	lastError = value
+}
+
+/**
  * Logs a message to a log file
  *
- * @param { string } tag
- * @param { Error|object|string } message
- * @param { string } [sender]
+ * @param {string} tag
+ * @param {Error|object|string} message
+ * @param {string} [sender]
  *
  * @return {void}
  */
@@ -219,4 +245,6 @@ module.exports = {
 	logText   : text,
 	logDebug  : debug,
 	logSuccess: success,
+	getLastError,
+	resetLastError,
 }

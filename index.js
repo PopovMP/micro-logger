@@ -77,6 +77,8 @@ function init(logFilePath, options)
  *
  * @param {Error|object|string} message
  * @param {string} [sender]
+ *
+ * @return {void}
  */
 function error(message, sender)
 {
@@ -88,6 +90,8 @@ function error(message, sender)
  *
  * @param {Error|object|string} message
  * @param {string} [sender]
+ *
+ * @return {void}
  */
 function debug(message, sender)
 {
@@ -99,6 +103,8 @@ function debug(message, sender)
  *
  * @param {Error|object|string} message
  * @param {string} [sender]
+ *
+ * @return {void}
  */
 function info(message, sender)
 {
@@ -110,6 +116,8 @@ function info(message, sender)
  *
  * @param { string } message
  * @param { string } [sender]
+ *
+ * @return {void}
  */
 function success(message, sender)
 {
@@ -120,6 +128,8 @@ function success(message, sender)
  * Logs a text message
  *
  * @param {string} message
+ *
+ * @return {void}
  */
 function text(message)
 {
@@ -132,15 +142,16 @@ function text(message)
  * @param { string } tag
  * @param { Error|object|string } message
  * @param { string } [sender]
+ *
+ * @return {void}
  */
 function logMessage(tag, message, sender)
 {
-	if ( loggerOptions.suppress.includes(tag) )
-		return
+	if ( loggerOptions.suppress.includes(tag) ) return
 
 	const text = ['info', 'error', 'debug', 'success'].includes(tag)
-		? composeMessage(tag, message, sender)
-		: message
+					? composeMessage(tag, message, sender)
+					: message
 
 	if (isInit) {
 		fs.appendFile(logPath, text + os.EOL, err => {
@@ -159,16 +170,18 @@ function logMessage(tag, message, sender)
  * @param {string} tag
  * @param {Error|object|string} message
  * @param {string} [sender]
+ *
+ * @return {string}
  */
 function composeMessage(tag, message, sender)
 {
 	const timeText    = timeToString(Date.now())
 	const senderText  = sender ? `[${sender}] ` : ''
 	const messageText = typeof message === 'object' || Array.isArray(message)
-		? message.message
-			? message.message
-			: JSON.stringify(message, null, 2)
-		: String(message)
+							? message.message
+								? message.message
+								: JSON.stringify(message, null, 2)
+							: String(message)
 
 	return `${timeText} ${tags[tag]} ${senderText}${messageText}`
 }
@@ -177,17 +190,20 @@ function composeMessage(tag, message, sender)
  * Formats time to string
  *
  * @param {number} time
- * @returns {string}
+ *
+ * @return {string}
  */
 function timeToString(time)
 {
 	const date  = new Date(time)
+
 	const year  = date.getFullYear()
-	const month = date.getMonth()   < 9  ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)
-	const day   = date.getDate()    < 10 ? '0' + date.getDate()    : date.getDate()
-	const hour  = date.getHours()   < 10 ? '0' + date.getHours()   : date.getHours()
-	const min   = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-	const sec   = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+	const month = date.getMonth()   <  9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)
+	const day   = date.getDate()    < 10 ? '0' +  date.getDate()       :  date.getDate()
+	const hour  = date.getHours()   < 10 ? '0' +  date.getHours()      :  date.getHours()
+	const min   = date.getMinutes() < 10 ? '0' +  date.getMinutes()    :  date.getMinutes()
+	const sec   = date.getSeconds() < 10 ? '0' +  date.getSeconds()    :  date.getSeconds()
+
 	return `${year}-${month}-${day} ${hour}:${min}:${sec}`
 }
 

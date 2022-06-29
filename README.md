@@ -17,7 +17,7 @@ const logger = require('@popovmp/micro-logger');
 logger.info('Hello World!', 'app::sayHello');
 
 // Alternative use
-const { logInfo, logError, logText, logDebug, logSuccess } = require('@popovmp/micro-logger'); 
+const { logInfo, logError, logText, logDebug, logSuccess } = require('@popovmp/micro-logger');
 logInfo('Mamma mia!')
 ```
 
@@ -33,12 +33,12 @@ npm install @popovmp/micro-logger
 It is a good idea to set the path relative to `__dirname`.
 
 If you don't want the logger to write to a file, you may skip the `init` part or to call it without args.
-The logger will only show the messages in the terminal in that case. 
+The logger will only show the messages in the terminal in that case.
 
 If **micro-logger** is not initialized, it writes to the console.
-It allows it to be used in modules without initialization. 
+It allows it to be used in modules without initialization.
 
-You have to initialize the logger only once. It is best to do it in the application main script `index.js` or `app.js`. 
+You have to initialize the logger only once. It is best to do it in the application main script `index.js` or `app.js`.
 
 **micro-logger** writes to the log file asynchronously (aka Fire and Forget).
 You can log only a message, or a message and sender. Sender can be a method name or other hint.
@@ -56,7 +56,7 @@ The `logger.text` method logs only the provided message. It doesn't log a date, 
 ```javascript
 const path = require('path');
 const {
- logInfo, logText, logError, logDebug, logSuccess,
+ logInfo, logText, logError, logDebug, logSuccess, getLastError,
 } = require('@popovmp/micro-logger').init( path.join(__dirname, 'logs/log.txt'), {tee: true, suppress: ['debug']} );
 
 logInfo('Hello World');                    // 2020-08-21 06:21:11 [INFO] Hello World
@@ -65,9 +65,26 @@ logError('Ohh!', 'bank::delete-account');  // 2020-08-21 06:21:11 [ERROR] [bank:
 logText('So Long, and Thanks for All the Fish!');  // So Long, and Thanks for All the Fish!
 ```
 
+## Last error
+
+**micro-logger** has two methods for getting and resetting the last logged error message: `getLastError` and `resetLastError`.
+
+`getLastError` returns the last logged error message by the `logError` or `logger.error` methods.
+
+You can reset the last error with the `resetLastError` method. When `resetLastError` is called without parameters,
+it sets the last error to `undefined`. `resetLastError` can be called with `null` to set the last error to `null`.
+
+
+```javascript
+getLastError();         // undefined
+logError('some eror');
+getLastError();         // some error
+resetLastError();
+getLastError();         // undefined
+```
 ## Options
 
-The `init` method accepts an options `options` parameter. It has two property `tee: boolean` and `suppress: string[]`. 
+The `init` method accepts an options `options` parameter. It has two property `tee: boolean` and `suppress: string[]`.
 
 When `tee` is set to `true`, the logger doubles the message on the console.
 

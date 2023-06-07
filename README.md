@@ -9,16 +9,16 @@ Homepage: https://github.com/popovmp/micro-logger
 
 ```javascript
 // Intialize `micro-logger`in your index.js
-const logger = require('@popovmp/micro-logger').init('./logs/log.txt');
-logger.info('App started', 'app::index');
+const logger = require("@popovmp/micro-logger").init("./logs/log.txt");
+logger.info("App started", "app::index");
 
 // Use it in your other files
-const logger = require('@popovmp/micro-logger');
-logger.info('Hello World!', 'app::sayHello');
+const logger = require("@popovmp/micro-logger");
+logger.info("Hello World!", "app::sayHello");
 
 // Alternative use
-const { logInfo, logError, logText, logDebug, logSuccess } = require('@popovmp/micro-logger');
-logInfo('Mamma mia!')
+const {logInfo, logError, logText, logDebug, logSuccess} = require("@popovmp/micro-logger");
+logInfo("Mamma mia!");
 ```
 
 ## Installation
@@ -54,15 +54,15 @@ The methods `logger.info`, `logger.error` logs:
 The `logger.text` method logs only the provided message. It doesn't log a date, a label or a sender.
 
 ```javascript
-const path = require('path');
+const path = require("path");
 const {
  logInfo, logText, logError, logDebug, logSuccess, getLastError,
-} = require('@popovmp/micro-logger').init( path.join(__dirname, 'logs/log.txt'), {tee: true, suppress: ['debug']} );
+} = require("@popovmp/micro-logger").init( path.join(__dirname, "logs/log.txt"), {tee: true, suppress: ["debug"]} );
 
-logInfo('Hello World');                    // 2020-08-21 06:21:11 [INFO] Hello World
-logInfo('GET index', 'app::router');       // 2020-08-21 06:21:11 [INFO] [app::router] GET index
-logError('Ohh!', 'bank::delete-account');  // 2020-08-21 06:21:11 [ERROR] [bank::delete-account] Ohh!
-logText('So Long, and Thanks for All the Fish!');  // So Long, and Thanks for All the Fish!
+logInfo("Hello, World!");                          // => 2020-08-21 06:21:11 [INFO] Hello, World!
+logInfo("GET index", "app::router");               // => 2020-08-21 06:21:11 [INFO] [app::router] GET index
+logError("Ohh!", "bank::delete-account");          // => 2020-08-21 06:21:11 [ERROR] [bank::delete-account] Ohh!
+logText("So Long, and Thanks for All the Fish!");  // => So Long, and Thanks for All the Fish!
 ```
 
 ## Last error

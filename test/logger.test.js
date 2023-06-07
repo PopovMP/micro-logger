@@ -1,90 +1,89 @@
-'use strict'
+"use strict";
 
-const fs   = require('fs')
-const path = require('path')
+const fs   = require("fs");
+const path = require("path");
 
-const {ok, match, doesNotMatch} = require('assert')
-const {describe, it}            = require('@popovmp/mocha-tiny')
+const {ok, match, doesNotMatch} = require("assert");
+const {describe, it}            = require("node:test");
 
-const logPath = path.join(__dirname, '/logs/log.txt')
+const logPath = path.join(__dirname, "/logs/log.txt");
 
-if ( fs.existsSync(logPath) ) {
-	fs.unlinkSync(logPath)
+if (fs.existsSync(logPath)) {
+    fs.unlinkSync(logPath);
 }
 
-const options = {tee: true, suppress: ['text']}
-const {logDebug, logError, logInfo, logText, logSuccess} = require('../index').init(logPath, options)
+const options = {tee: true, suppress: ["text"]};
+const {logDebug, logError, logInfo, logText, logSuccess} = require("../index").init(logPath, options);
 
-describe('micro-logger', () => {
-	describe('init(path, options)', () => {
-		it('creates a log file', () => {
-			ok(fs.existsSync(logPath))
-		})
-	})
+describe("micro-logger", () => {
+    describe("init(path, options)", () => {
+        it("creates a log file", () => {
+            ok(fs.existsSync(logPath));
+        });
+    });
 
-	describe('logInfo(message, sender)', () => {
-		it('log an information message', () => {
-			logInfo('The quick brown fox jumps over the lazy dog', 'alphabet')
-		})
-	})
+    describe("logInfo(message, sender)", () => {
+        it("log an information message", () => {
+            logInfo("The quick brown fox jumps over the lazy dog", "alphabet");
+        });
+    });
 
-	describe('logError(message, sender)', () => {
-		it('log an Error', () => {
-			logError(new Error('This is a serious error!'), 'mission :: critical')
-		})
-	})
+    describe("logError(message, sender)", () => {
+        it("log an Error", () => {
+            logError(new Error("This is a serious error!"), "mission :: critical");
+        });
+    });
 
-	describe('logDebug(message, sender)', () => {
-		it('log a debug information', () => {
-			logDebug('The logger logs debug information', 'logger :: debug')
-		})
-	})
+    describe("logDebug(message, sender)", () => {
+        it("log a debug information", () => {
+            logDebug("The logger logs debug information", "logger :: debug");
+        });
+    });
 
-	describe('logSuccess(message, sender)', () => {
-		it('log a success information', () => {
-			logSuccess('micro-logger is a very micro logger', 'the author')
-		})
-	})
+    describe("logSuccess(message, sender)", () => {
+        it("log a success information", () => {
+            logSuccess("micro-logger is a very micro logger", "the author");
+        });
+    });
 
-	describe('logText(message)', () => {
-		it('log text (being ignored)', () => {
-			logText('ignore this')
-		})
-	})
-})
+    describe("logText(message)", () => {
+        it("log text (being ignored)", () => {
+            logText("ignore this");
+        });
+    });
+});
 
-// Sleep for 1 secs to give time for the log to update
+// Sleep for 1 sec to give time for the log to update
 // We hope that it will be enough.
 // There is no callback report from the log to make it faster and simpler.
-setTimeout(checkLogContent, 1000)
+setTimeout(checkLogContent, 1000);
 
-function checkLogContent()
-{
-	const content = fs.readFileSync(logPath, 'utf-8')
+function checkLogContent() {
+    const content = fs.readFileSync(logPath, "utf-8");
 
-	describe('Log content', () => {
+    describe("Log content", () => {
 
-		it('info content persists', () => {
-			match(content, /INFO.*alphabet.*fox/)
-		})
+        it("info content persists", () => {
+            match(content, /INFO.*alphabet.*fox/);
+        });
 
-		it('error content persists', () => {
-			match(content, /ERROR.*error/)
-		})
+        it("error content persists", () => {
+            match(content, /ERROR.*error/);
+        });
 
-		it('debug content persists', () => {
-			match(content, /DEBUG.*debug.*debug/)
-		})
+        it("debug content persists", () => {
+            match(content, /DEBUG.*debug.*debug/);
+        });
 
-		it('success content persists', () => {
-			match(content, /SUCCESS.*logger/)
-		})
+        it("success content persists", () => {
+            match(content, /SUCCESS.*logger/);
+        });
 
-		it('text content is ignored', () => {
-			doesNotMatch(content, /ignore/)
-		})
-	})
+        it("text content is ignored", () => {
+            doesNotMatch(content, /ignore/);
+        });
+    });
 
-	fs.unlinkSync(logPath)
-	fs.rmdirSync(path.dirname(logPath))
+    fs.unlinkSync(logPath);
+    fs.rmdirSync(path.dirname(logPath));
 }

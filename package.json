@@ -7,11 +7,8 @@
   "license": "MIT",
   "homepage": "https://github.com/popovmp/micro-logger",
   "scripts": {
-    "test": "mocha-tiny",
-    "prepublishOnly": "npm test"
-  },
-  "devDependencies": {
-    "@popovmp/mocha-tiny": "^2.2.0"
+    "test": "node --test",
+    "prepublishOnly": "node --test"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 # A simple Logger helper for nodejs
 
-**micro-logger** is a very simple, zero dependencies library for logging. It logs to a single predefined file.
+**micro-logger** is a straightforward, zero dependencies library for logging. It logs to a single predefined file.
 When an option `{tee: true}` is given, **micro-logger** shows colored messages in the console.
 
 Homepage: https://github.com/popovmp/micro-logger
@@ -77,7 +77,7 @@ it sets the last error to `undefined`. `resetLastError` can be called with `null
 
 ```javascript
 getLastError();         // undefined
-logError('some eror');
+logError("some eror");
 getLastError();         // some error
 resetLastError();
 getLastError();         // undefined
@@ -101,11 +101,11 @@ The possible values are:
 The default values of `suppress` is an empty list.
 
 ```javascript
-const path = require('path');
-const logger = require('@popovmp/micro-logger');
-logger.init( path.join(__dirname, 'logs/log.txt'), {tee: true} );
+const path   = require("path");
+const logger = require("@popovmp/micro-logger");
+logger.init(path.join(__dirname, "logs/log.txt"), {tee: true});
 
-logger.info('Foo'); // Logs 'Foo', Prints 'Foo' on the console.
+logger.info("Foo"); // Logs 'Foo', Prints 'Foo' on the console.
 ```
 
 ## Methods

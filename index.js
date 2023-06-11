@@ -7,8 +7,9 @@ const path = require("path");
 /**
  * @typedef {object} LoggerOptions
  *
- * @property { boolean  } [tee=false]
- * @property { string[] } [suppress=[]] - tags to suppress. Possibilities: ['debug', 'error', 'info', 'success', 'text']
+ * @property {boolean } [tee=false] - whether to log to console
+ * @property {string[]} [suppress=[]] - tags to suppress.
+ * Possibilities: ['debug', 'error', 'info', 'success', 'text']
  */
 
 /**
@@ -46,30 +47,30 @@ const colors = {
 /**
  * Sets the log path
  *
- * @param {string       } logFilePath
- * @param {LoggerOptions} [options]
+ * @param {string       } [logFilePath=""] - Path to the log file.
+ * Suppress file logging if empty.
+ *
+ * @param {LoggerOptions} [options={}] - Logger options
  *
  * @return { {init, error, info, text} }
  */
-function init(logFilePath, options) {
-    if (isInit || !logFilePath) {
+function init(logFilePath="", options={}) {
+    if (isInit) {
         return module.exports;
     }
 
     logPath = logFilePath;
     isInit  = true;
 
-    if (options) {
-        if (typeof options.tee === "boolean") {
-            loggerOptions.tee = options.tee;
-        }
-
-        if (Array.isArray(options.suppress)) {
-            loggerOptions.suppress = options.suppress.slice();
-        }
+    if (typeof options.tee === "boolean") {
+        loggerOptions.tee = options.tee;
     }
 
-    if (!fs.existsSync(logPath)) {
+    if (Array.isArray(options.suppress)) {
+        loggerOptions.suppress = options.suppress.slice();
+    }
+
+    if (logPath !== "" && !fs.existsSync(logPath)) {
         fs.mkdirSync(path.dirname(logPath), {recursive: true});
         fs.writeFileSync(logPath, "", "utf8");
     }
@@ -175,15 +176,15 @@ function logMessage(tag, message, sender) {
         ? composeMessage(tag, message, sender)
         : message;
 
-    if (isInit) {
-        fs.appendFile(logPath, text + os.EOL, err => {
+    if (isInit && logPath !== "") {
+        fs.appendFile(logPath, text + os.EOL, (err) => {
             if (err) {
                 console.log(err.message);
             }
         });
     }
 
-    if (!isInit || loggerOptions.tee) {
+    if (!isInit || loggerOptions.tee || logPath === "") {
         console.log(colors[tag] + text + colors.reset);
     }
 }

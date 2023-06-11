@@ -2,6 +2,7 @@
 
 **micro-logger** is a straightforward, zero dependencies library for logging. It logs to a single predefined file.
 When an option `{tee: true}` is given, **micro-logger** shows colored messages in the console.
+If a log file is not defined, **micro-logger** writes to the console only.
 
 Homepage: https://github.com/popovmp/micro-logger
 
